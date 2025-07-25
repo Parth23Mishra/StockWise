@@ -43,7 +43,7 @@ const loginUserApiHandler = async (userData) => {
 //logout user
 const logoutUserApiHandler = async () => {
     try {
-        await axios.post(`${BACKEND_BASE_URL}/logout`);
+        await axios.get(`${BACKEND_BASE_URL}/logout`);
     } catch (error) {
         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
         toast.error(message);

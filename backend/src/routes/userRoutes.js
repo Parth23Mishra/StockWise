@@ -7,7 +7,7 @@ const userRoutes = Router();
 
 userRoutes.post('/register', registerNewUser);
 userRoutes.post('/login', loginUser);
-userRoutes.post('/logout', isAuthorised, logoutUser);
+userRoutes.get('/logout', isAuthorised, logoutUser);
 
 userRoutes.get('/is-logged-in', isLoggedIn);
 userRoutes.get('/profile', isAuthorised, getUserProfile)

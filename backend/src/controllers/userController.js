@@ -42,7 +42,6 @@ const registerNewUser = async (req, res) => {
         const newUser = await userModel.create({ username, email, password })
 
         if (newUser) {
-            generateToken(res, newUser._id)
             res.status(201).json({
                 _id: newUser._id,
                 email: newUser.email,
