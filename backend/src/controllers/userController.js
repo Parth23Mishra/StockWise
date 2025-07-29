@@ -88,10 +88,17 @@ const loginUser = async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (user && isMatch) {
         generateToken(res, user._id);
+        const accessToken = req.cookies.accessToken;
+        const refreshToken = req.cookies.refreshToken;
+        user.refreshToken = refreshToken;
+        await user.save({validateBeforeSave: false});
         res.status(200).json({
             _id: user._id,
-            email: user.email
+            email: user.email,
+            accessToken: accessToken,
+            refreshToken: refreshToken
         });
+        
     } else {
         res.status(400).json({
             message: "Invalid Password !"
@@ -114,12 +121,19 @@ const loginUser = async (req, res) => {
 const logoutUser = async (req, res) => {
     try {
         // clear the value from cookies
-        res.cookie('jwt', '', {
-            httpOnly: true,
-            expires: new Date(0),
-        });
+        const user = req.user;
+        user.refreshToken = undefined;
+        await user.save({ validateBeforeSave: false });
 
-        res.status(200).json({ message: "User logged out successfully." });
+        const options = {
+            httpOnly: true,
+            secure: true
+        };
+
+        res.status(200)
+        .clearCookie('accessToken', options)
+        .clearCookie('refreshToken', options)
+        .json({ message: "User logged out successfully." });
     } catch (error) {
         console.log(error);
         res.status(500).json({
@@ -144,8 +158,8 @@ const logoutUser = async (req, res) => {
  */
 const isLoggedIn = async (req, res) => {
     try {
-        const token = req.cookies.jwt;
-
+        const accessToken = req.cookies.accessToken;
+        const refreshToken = req.cookies.refreshToken;
         if (!token) {
             return res.status(401).json(false); // Unauthorized if no token
         };

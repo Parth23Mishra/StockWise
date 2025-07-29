@@ -2,7 +2,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 // backend url
-const BACKEND_BASE_URL = "https://inventory-management-sopan.onrender.com/api/v1/user";
+const BACKEND_BASE_URL = "http://127.0.0.1:5050";
 
 // email validation
 const validateEmail = async (email) => {

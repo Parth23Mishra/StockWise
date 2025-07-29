@@ -25,7 +25,12 @@ const userSchema = mongoose.Schema(
         photo: {
             type: String,
             default: "https://i.ibb.co/4pDNDk1/avatar.png"
-        }
+        },
+
+        refreshToken: {
+            type: String,
+            default: ""
+        },
     },
     {
         timestamp: true
